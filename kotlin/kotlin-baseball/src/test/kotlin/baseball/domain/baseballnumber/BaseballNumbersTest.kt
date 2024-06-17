@@ -71,6 +71,45 @@ class BaseballNumbersTest : BehaviorSpec({
         }
     }
 
+    Given("특정 인덱스의 BaseballNumber를 가져오려고 할 때") {
+        val values = listOf(1, 2, 3)
+        val baseballNumbers = BaseballNumbers.of(values)
+
+        When("올바른 인덱스의 값을 입력하면") {
+            val index = 2
+            val actual = baseballNumbers.get(index)
+
+            Then("정상적으로 값을 가져올 수 있다.") {
+                actual.value shouldBe values[index]
+            }
+        }
+    }
+
+    Given("특정 값을 가지는 BaseballNumber가 포함되어 있는지 확인하려 할 때") {
+        val givenValues = listOf(1, 2, 3)
+        val baseballNumbers = BaseballNumbers.of(givenValues)
+
+        When("값이 존재 한다면") {
+            val targetValue = 2
+            val baseballNumber = BaseballNumber(targetValue)
+            val actual = baseballNumbers.containsAt(baseballNumber)
+
+            Then("위치하는 인덱스를 반환한다") {
+                actual shouldBe givenValues.indexOf(targetValue)
+            }
+        }
+
+        When("값이 존재하지 않는다면") {
+            val targetValue = 5
+            val baseballNumber = BaseballNumber(targetValue)
+            val actual = baseballNumbers.containsAt(baseballNumber)
+
+            Then("-1을 반환한다") {
+                actual shouldBe -1
+            }
+        }
+    }
+
     Given("팩토리를 이용해 BaseballNumbers 객체를 생성하려 할 떄") {
 
         When("3개의 정수 리스트를 입력하면") {

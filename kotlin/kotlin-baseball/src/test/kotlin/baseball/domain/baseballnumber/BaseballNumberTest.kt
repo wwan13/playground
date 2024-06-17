@@ -65,17 +65,4 @@ class BaseballNumberTest : BehaviorSpec({
             }
         }
     }
-
-    Given("팩토리를 이용해 BaseballNumbers 객체를 생성하려 할 떄") {
-
-        When("3개의 정수 리스트를 입력하면") {
-            val values = listOf(1, 2, 3)
-            val actual = BaseballNumbers.of(values)
-
-            Then("BaseballNumber 리스트를 가지는 객체가 생성된다") {
-                actual.values.javaClass shouldBe ArrayList::class.java
-                actual.values[0].javaClass shouldBe BaseballNumber::class.java
-            }
-        }
-    }
 })

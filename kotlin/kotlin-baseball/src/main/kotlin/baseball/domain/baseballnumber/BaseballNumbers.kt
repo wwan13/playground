@@ -19,6 +19,10 @@ data class BaseballNumbers(
 
     private fun isDuplicated(values: List<BaseballNumber>) = values.toSet().size != values.size
 
+    fun get(index: Int) = values[index]
+
+    fun containsAt(value: BaseballNumber) = values.indexOf(value)
+
     companion object {
         fun of(values: List<Int>): BaseballNumbers {
             val baseballNumbers = values.map {

@@ -1,7 +1,7 @@
 package baseball.domain.baseballnumber
 
-import baseball.domain.constant.BASEBALL_NUMBER_MAX_VALUE
-import baseball.domain.constant.BASEBALL_NUMBER_MIN_VALUE
+import baseball.constant.BASEBALL_NUMBER_MAX_VALUE
+import baseball.constant.BASEBALL_NUMBER_MIN_VALUE
 
 data class BaseballNumber(
     val value: Int,

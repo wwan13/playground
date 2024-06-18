@@ -1,6 +1,6 @@
 package baseball.domain.baseballnumber
 
-import baseball.domain.constant.BASEBALL_NUMBER_SIZE
+import baseball.constant.BASEBALL_NUMBER_SIZE
 
 data class BaseballNumbers(
     val values: List<BaseballNumber>

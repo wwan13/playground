@@ -1,7 +1,7 @@
 package baseball.domain.numbercomparator
 
 import baseball.domain.baseballnumber.BaseballNumbers
-import baseball.domain.constant.BASEBALL_NUMBER_SIZE
+import baseball.constant.BASEBALL_NUMBER_SIZE
 
 class BaseballNumberComparator {
 

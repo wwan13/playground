@@ -1,8 +1,9 @@
-package baseball.domain.numberprovider
+package baseball.domain.numberprovider.random
 
 import baseball.constant.BASEBALL_NUMBER_MAX_VALUE
 import baseball.constant.BASEBALL_NUMBER_MIN_VALUE
 import baseball.constant.BASEBALL_NUMBER_SIZE
+import baseball.domain.numberprovider.BaseballNumberProvider
 import camp.nextstep.edu.missionutils.Randoms
 
 class RandomBaseballNumberProvider : BaseballNumberProvider {

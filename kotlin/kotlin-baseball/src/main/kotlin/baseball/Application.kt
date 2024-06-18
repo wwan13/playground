@@ -1,5 +1,14 @@
 package baseball
 
+import baseball.config.ApplicationConfig
+import baseball.config.BaseballGameConfig
+import baseball.controller.BaseballGameController
+
 fun main() {
-    TODO("프로그램 구현")
+    val applicationConfig = ApplicationConfig()
+    val baseballGameConfig = BaseballGameConfig()
+
+    val baseballGameController = BaseballGameController(applicationConfig, baseballGameConfig)
+
+    baseballGameController.playGame()
 }

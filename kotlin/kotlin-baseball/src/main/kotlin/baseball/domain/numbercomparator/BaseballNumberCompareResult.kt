@@ -1,6 +1,6 @@
 package baseball.domain.numbercomparator
 
-import baseball.domain.constant.ANSWER_STRIKE_VALUE
+import baseball.constant.ANSWER_STRIKE_VALUE
 
 data class BaseballNumberCompareResult(
     val strike: Int,

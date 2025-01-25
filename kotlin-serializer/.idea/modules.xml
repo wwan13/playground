@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/KotlinSerializer.iml" filepath="$PROJECT_DIR$/KotlinSerializer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/kotlin-serializer.iml" filepath="$PROJECT_DIR$/kotlin-serializer.iml" />
     </modules>
   </component>
 </project>

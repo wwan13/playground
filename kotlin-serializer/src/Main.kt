@@ -1,4 +1,12 @@
 fun main() {
+    val serializer = RecursionSerializer
+
+    executeToJson(serializer)
+    println()
+    executeFromJson(serializer)
+}
+
+fun executeToJson(serializer: Serializer) {
     val data: Map<String, Any?> = mapOf(
         "name" to "John Doe",
         "age" to 30L,
@@ -15,6 +23,19 @@ fun main() {
         "nullValue" to null
     )
 
-    val jsonValue = RecursionSerializer.toJson(data)
+    val jsonValue = serializer.toJson(data)
+    println("=== ToJson ===")
     println(jsonValue)
+    println("===============")
+}
+
+fun executeFromJson(serializer: Serializer) {
+    val json = """
+        {"name":"John Doe","age":30,"address":{"street":"123 Main St","city":"Anytown","postalCode":"12345"},"phones":[{"type":"home","number":"123-456-7890"},{"type":"work","number":"098-765-4321"}],"isActive":true,"nullValue":null}
+    """.trimIndent()
+
+    val data = serializer.fromJson(json)
+    println("=== FromJson ===")
+    println(data.toString())
+    println("===============")
 }

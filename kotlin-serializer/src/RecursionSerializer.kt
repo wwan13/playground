@@ -1,4 +1,5 @@
 object RecursionSerializer : Serializer {
+    // serializing
     override fun toJson(data: Map<String, Any?>): String {
         return data.entries.joinToString(
             separator = ",",
@@ -29,32 +30,49 @@ object RecursionSerializer : Serializer {
         ) { writeValue(it) }
     }
 
+    // deserializing
     override fun fromJson(json: String): Map<String, Any?> {
         val iterator = json.trim().iterator()
-        return parseObject(iterator)
+        return parseObject(iterator, true)
     }
 
-    private fun parseObject(iterator: CharIterator): Map<String, Any?> {
-        // if (iterator.next() != '{') {
-        //     throw IllegalArgumentException("Invalid JSON object")
-        // }
-
+    private fun parseObject(
+        iterator: CharIterator,
+        skipFirst: Boolean = false,
+    ): Map<String, Any?> {
         val map = mutableMapOf<String, Any?>()
+
+        if (skipFirst) {
+            iterator.skip('{')
+        }
 
         while (iterator.hasNext()) {
             val key = parseString(iterator, true)
-
             iterator.skip(':')
-
             map[key] = parseValue(iterator)
 
-            when (val c = iterator.next()) {
+            when (iterator.next()) {
                 '}' -> return map
                 ',', '"' -> continue
                 else -> throw IllegalArgumentException("Invalid JSON object")
             }
         }
         throw IllegalArgumentException("Unclosed JSON object")
+    }
+
+    private fun parseValue(iterator: CharIterator): Any? {
+        while (iterator.hasNext()) {
+            when (val c = iterator.next()) {
+                '"' -> return parseString(iterator)
+                't' -> return parseBoolean(iterator, true)
+                'f' -> return parseBoolean(iterator, false)
+                'n' -> return parseNull(iterator)
+                '{' -> return parseObject(iterator)
+                '[' -> return parseArray(iterator)
+                in '0'..'9', '-' -> return parseNumber(iterator, c)
+            }
+        }
+        throw IllegalArgumentException("Invalid JSON value")
     }
 
     private fun parseArray(iterator: CharIterator): List<Any?> {
@@ -70,48 +88,9 @@ object RecursionSerializer : Serializer {
         throw IllegalArgumentException("Unclosed JSON array")
     }
 
-    private fun parseValue(iterator: CharIterator): Any? {
-        while (iterator.hasNext()) {
-            when (val c = iterator.next()) {
-                '"' -> return parseString(iterator)
-                't' -> {
-                    if (isNext(iterator, 'r', 'u', 'e')) {
-                        return true
-                    }
-                }
-
-                'f' -> {
-                    if (isNext(iterator, 'a', 'l', 's', 'e')) {
-                        return false
-                    }
-                }
-
-                'n' -> {
-                    if (isNext(iterator, 'u', 'l', 'l')) {
-                        return null
-                    }
-                }
-
-                '{' -> return parseObject(iterator)
-                '[' -> return parseArray(iterator)
-                in '0'..'9', '-' -> {
-                    val number = buildString {
-                        append(c)
-                        while (iterator.hasNext()) {
-                            val ch = iterator.next()
-                            if (ch in "0123456789.-eE") append(ch) else break
-                        }
-                    }
-                    return number.toDoubleOrNull() ?: number.toLong()
-                }
-            }
-        }
-        throw IllegalArgumentException("Invalid JSON value")
-    }
-
     private fun parseString(
         iterator: CharIterator,
-        isKey: Boolean = false
+        isKey: Boolean = false,
     ): String {
         if (isKey) {
             iterator.next()
@@ -127,9 +106,39 @@ object RecursionSerializer : Serializer {
         }.toString()
     }
 
+    private fun parseBoolean(iterator: CharIterator, value: Boolean): Boolean {
+        return if (isNext(iterator, 'r', 'u', 'e')) {
+            true
+        } else if (isNext(iterator, 'a', 'l', 's', 'e')) {
+            false
+        } else {
+            throw IllegalArgumentException("Invalid JSON boolean")
+        }
+    }
+
+    private fun parseNull(iterator: CharIterator): Any? {
+        return if (isNext(iterator, 'u', 'l', 'l')) {
+            null
+        } else {
+            throw IllegalArgumentException("Invalid JSON null")
+        }
+    }
+
+    private fun parseNumber(iterator: CharIterator, c: Char): Number {
+        return StringBuilder().let {
+            it.append(c)
+            while (iterator.hasNext()) {
+                val ch = iterator.next()
+                if (ch in "0123456789.-eE") it.append(ch) else break
+            }
+            val stringValue = it.toString()
+            stringValue.toDoubleOrNull() ?: stringValue.toLong()
+        }
+    }
+
     private fun isNext(
         iterator: CharIterator,
-        vararg targets: Char
+        vararg targets: Char,
     ): Boolean {
         return targets.all {
             iterator.next() == it
